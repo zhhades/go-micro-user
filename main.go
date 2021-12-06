@@ -6,6 +6,7 @@ import (
 	"github.com/micro/go-micro/v2/registry"
 	"github.com/micro/go-micro/v2/util/log"
 	"github.com/micro/go-plugins/registry/consul/v2"
+	"github.com/micro/go-plugins/wrapper/ratelimiter/uber/v2"
 	opentracingV2 "github.com/micro/go-plugins/wrapper/trace/opentracing/v2"
 	"github.com/opentracing/opentracing-go"
 	"github.com/zhhades/go-micro-user/common"
@@ -41,6 +42,7 @@ func main() {
 		micro.Address("127.0.0.1:8082"),
 		micro.Registry(consulRegistry),
 		micro.WrapHandler(opentracingV2.NewHandlerWrapper(opentracing.GlobalTracer())),
+		micro.WrapHandler(ratelimit.NewHandlerWrapper(1)),
 	)
 
 	srv.Init()
